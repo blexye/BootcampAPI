@@ -1,8 +1,8 @@
 using BootcampAPI.Infrastructure;
-using MediatR;
 using BootcampAPI.Endpoints;
 using FluentValidation;
 using BootcampAPI.Features.Accounts.Commands.CreateAccount;
+using BootcampAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseValidationExceptionHandling();
 
 if (app.Environment.IsDevelopment())
 {
