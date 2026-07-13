@@ -8,7 +8,9 @@ namespace BootcampAPI.Features.Accounts.Commands.CreateAccount
 		{
 			RuleFor(p => p.AccountNumber)
 				.NotEmpty()
-				.WithMessage("El número de la cuenta es obligatorio");
+				.WithMessage("El número de la cuenta es obligatorio")
+				.GreaterThanOrEqualTo(0)
+				.WithMessage("Ingrese un número válido");
 
 			RuleFor(p => p.AccountType)
 				.NotEmpty()
