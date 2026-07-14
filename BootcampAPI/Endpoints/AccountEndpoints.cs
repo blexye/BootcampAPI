@@ -14,8 +14,30 @@ namespace BootcampAPI.Endpoints
 		{
 			var group = app.MapGroup("/api/minimal").WithTags("Accounts");
 
-			// Crear cuenta
-			group.MapPost("/accounts", async (CreateAccountCommand command, ISender sender, CancellationToken cancellationToken) =>
+            // Obtener todas las cuentas
+            group.MapGet("", async (ISender sender, CancellationToken cancellationToken) =>
+                Results.Ok(await sender.Send(new GetAllAccountsQuery(), cancellationToken)))
+                .Produces<IReadOnlyList<AccountDTO>>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status500InternalServerError)
+                .WithDescription("Obtener todas las cuentas");
+
+            // Obtener una cuenta por ID
+            group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
+            {
+                var account = await sender.Send(new GetAccountByIdQuery(id), cancellationToken);
+
+                return account is null ? Results.NotFound() : Results.Ok(account);
+            })
+                .Produces<AccountDTO>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status500InternalServerError)
+                .WithDescription("Obtener una cuenta por ID");
+
+            // Crear cuenta
+            group.MapPost("/accounts", async (CreateAccountCommand command, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var account = await sender.Send(command, cancellationToken);
 				return Results.Created($"api/minimal/{account.Id}", account);
@@ -43,28 +65,6 @@ namespace BootcampAPI.Endpoints
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.WithDescription("Modificar una cuenta existente");
-
-			// Obtener una cuenta por ID
-			group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
-			{
-				var account = await sender.Send(new GetAccountByIdQuery(id), cancellationToken);
-
-				return account is null ? Results.NotFound() : Results.Ok(account);
-			})
-				.Produces<AccountDTO>(StatusCodes.Status200OK)
-				.Produces(StatusCodes.Status400BadRequest)
-				.Produces(StatusCodes.Status404NotFound)
-				.Produces(StatusCodes.Status500InternalServerError)
-				.WithDescription("Obtener una cuenta por ID");
-
-			// Obtener todas las cuentas
-			group.MapGet("", async (ISender sender, CancellationToken cancellationToken) =>
-				Results.Ok(await sender.Send(new GetAllAccountsQuery(), cancellationToken)))
-				.Produces<IReadOnlyList<AccountDTO>>(StatusCodes.Status200OK)
-				.Produces(StatusCodes.Status400BadRequest)
-				.Produces(StatusCodes.Status404NotFound)
-				.Produces(StatusCodes.Status500InternalServerError)
-				.WithDescription("Obtener todas las cuentas");
 			
 			// Eliminar una cuenta
 			group.MapDelete("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
