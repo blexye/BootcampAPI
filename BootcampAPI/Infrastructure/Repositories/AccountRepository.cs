@@ -18,6 +18,8 @@ namespace BootcampAPI.Infrastructure.Repositories
 		public async Task<IReadOnlyList<Account>> GetAllAsync(CancellationToken cancellationToken = default) =>
 			await context.Accounts.AsNoTracking().ToListAsync(cancellationToken);
 
+		public void Remove(Account account) => context.Accounts.Remove(account);
+
 		public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
 			return await context.SaveChangesAsync(cancellationToken) > 0;

@@ -4,6 +4,7 @@ using BootcampAPI.Features.Accounts.DTOs;
 using BootcampAPI.Features.Accounts.Commands.UpdateAccount;
 using BootcampAPI.Features.Accounts.Queries.GetAccountById;
 using BootcampAPI.Features.Accounts.Queries.GetAllAccounts;
+using BootcampAPI.Features.Accounts.Commands.DeleteAccount;
 
 namespace BootcampAPI.Endpoints
 {
@@ -64,6 +65,18 @@ namespace BootcampAPI.Endpoints
 				.Produces(StatusCodes.Status404NotFound)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.WithDescription("Obtener todas las cuentas");
+			
+			// Eliminar una cuenta
+			group.MapDelete("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
+			{
+				var deleted = await sender.Send(new DeleteAccountCommand(id), cancellationToken);
+
+				return deleted ? Results.NoContent() : Results.NotFound();
+			})
+				.Produces(StatusCodes.Status204NoContent)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithDescription("Eliminar una cuenta por ID");
 		}
 	}
 }
