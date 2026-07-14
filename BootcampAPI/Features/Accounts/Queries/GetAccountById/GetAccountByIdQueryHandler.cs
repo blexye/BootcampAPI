@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BootcampAPI.Features.Accounts.Queries.GetAccountById
 {
-	public class GetAccountByIdHandler (IAccountRepository repository) : IRequestHandler <GetAccountByIdQuery, AccountDTO?>
+	public class GetAccountByIdQueryHandler (IAccountRepository repository) : IRequestHandler <GetAccountByIdQuery, AccountDTO?>
 	{
 		public async Task<AccountDTO?> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
 		{

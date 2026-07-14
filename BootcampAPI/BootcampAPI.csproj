@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Accounts\Commands\DeleteAccount\" />
-    <Folder Include="Features\Accounts\Queries\GetAllAccounts\" />
   </ItemGroup>
 
 </Project>

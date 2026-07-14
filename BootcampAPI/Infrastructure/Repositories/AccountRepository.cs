@@ -15,6 +15,9 @@ namespace BootcampAPI.Infrastructure.Repositories
 		public async Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellation = default) =>
 			await context.Accounts.FirstOrDefaultAsync(c => c.Id == id, cancellation);
 
+		public async Task<IReadOnlyList<Account>> GetAllAsync(CancellationToken cancellationToken = default) =>
+			await context.Accounts.AsNoTracking().ToListAsync(cancellationToken);
+
 		public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
 			return await context.SaveChangesAsync(cancellationToken) > 0;

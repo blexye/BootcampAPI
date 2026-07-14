@@ -2,9 +2,9 @@
 
 namespace BootcampAPI.Features.Accounts.Queries.GetAccountById
 {
-	public class GetAccountByIdValidator : AbstractValidator<GetAccountByIdQuery>
+	public class GetAccountByIdQueryValidator : AbstractValidator<GetAccountByIdQuery>
 	{
-		public GetAccountByIdValidator()
+		public GetAccountByIdQueryValidator()
 		{
 			RuleFor(c => c.Id)
 				.NotEmpty()

@@ -3,6 +3,7 @@ using BootcampAPI.Features.Accounts.Commands.CreateAccount;
 using BootcampAPI.Features.Accounts.DTOs;
 using BootcampAPI.Features.Accounts.Commands.UpdateAccount;
 using BootcampAPI.Features.Accounts.Queries.GetAccountById;
+using BootcampAPI.Features.Accounts.Queries.GetAllAccounts;
 
 namespace BootcampAPI.Endpoints
 {
@@ -20,7 +21,8 @@ namespace BootcampAPI.Endpoints
 			})
 				.Produces<AccountDTO>(StatusCodes.Status201Created)
 				.Produces(StatusCodes.Status400BadRequest)
-				.Produces(StatusCodes.Status500InternalServerError);
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithDescription("Crear cuenta nueva");
 
 			// Modificar cuenta
 			group.MapPut("/accounts/{id:guid}", async (Guid id, UpdateAccountBody body, ISender sender, CancellationToken cancellationToken) =>
@@ -38,7 +40,8 @@ namespace BootcampAPI.Endpoints
 			})
 				.Produces<AccountDTO>(StatusCodes.Status200OK)
 				.Produces(StatusCodes.Status400BadRequest)
-				.Produces(StatusCodes.Status500InternalServerError);
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithDescription("Modificar una cuenta existente");
 
 			// Obtener una cuenta por ID
 			group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
@@ -50,7 +53,17 @@ namespace BootcampAPI.Endpoints
 				.Produces<AccountDTO>(StatusCodes.Status200OK)
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status404NotFound)
-				.Produces(StatusCodes.Status500InternalServerError);
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithDescription("Obtener una cuenta por ID");
+
+			// Obtener todas las cuentas
+			group.MapGet("", async (ISender sender, CancellationToken cancellationToken) =>
+				Results.Ok(await sender.Send(new GetAllAccountsQuery(), cancellationToken)))
+				.Produces<IReadOnlyList<AccountDTO>>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status404NotFound)
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithDescription("Obtener todas las cuentas");
 		}
 	}
 }
