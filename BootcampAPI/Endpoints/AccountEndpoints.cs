@@ -2,6 +2,7 @@
 using BootcampAPI.Features.Accounts.Commands.CreateAccount;
 using BootcampAPI.Features.Accounts.DTOs;
 using BootcampAPI.Features.Accounts.Commands.UpdateAccount;
+using BootcampAPI.Features.Accounts.Queries.GetAccountById;
 
 namespace BootcampAPI.Endpoints
 {
@@ -37,6 +38,18 @@ namespace BootcampAPI.Endpoints
 			})
 				.Produces<AccountDTO>(StatusCodes.Status200OK)
 				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status500InternalServerError);
+
+			// Obtener una cuenta por ID
+			group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
+			{
+				var account = await sender.Send(new GetAccountByIdQuery(id), cancellationToken);
+
+				return account is null ? Results.NotFound() : Results.Ok(account);
+			})
+				.Produces<AccountDTO>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status404NotFound)
 				.Produces(StatusCodes.Status500InternalServerError);
 		}
 	}
