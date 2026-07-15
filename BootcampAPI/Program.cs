@@ -2,6 +2,7 @@ using BootcampAPI.Application.Common.Behaviors;
 using BootcampAPI.Endpoints;
 using BootcampAPI.Features.Accounts.Commands.CreateAccount;
 using BootcampAPI.Infrastructure;
+using Scalar.AspNetCore;
 using BootcampAPI.Middleware;
 using FluentValidation;
 using MediatR;
@@ -35,6 +36,7 @@ app.UseValidationExceptionHandling();
 if (app.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
+	app.MapScalarApiReference();
 
 	app.UseSwagger();
 	app.UseSwaggerUI();
