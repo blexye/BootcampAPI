@@ -14,16 +14,15 @@ namespace BootcampAPI.Endpoints
 		{
 			var group = app.MapGroup("/api/minimal").WithTags("Accounts");
 
-            // Obtener todas las cuentas
             group.MapGet("", async (ISender sender, CancellationToken cancellationToken) =>
                 Results.Ok(await sender.Send(new GetAllAccountsQuery(), cancellationToken)))
                 .Produces<IReadOnlyList<AccountDTO>>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError)
-                .WithDescription("Obtener todas las cuentas");
+                .WithDescription("Obtener todas las cuentas")
+				.WithSummary("Obtener todos los datos de todas las cuentas");
 
-            // Obtener una cuenta por ID
             group.MapGet("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
             {
                 var account = await sender.Send(new GetAccountByIdQuery(id), cancellationToken);
@@ -34,9 +33,9 @@ namespace BootcampAPI.Endpoints
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError)
-                .WithDescription("Obtener una cuenta por ID");
+                .WithDescription("Obtener una cuenta por ID")
+				.WithSummary("Obtener los datos de una cuenta por ID");
 
-            // Crear cuenta
             group.MapPost("/accounts", async (CreateAccountCommand command, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var account = await sender.Send(command, cancellationToken);
@@ -45,9 +44,9 @@ namespace BootcampAPI.Endpoints
 				.Produces<AccountDTO>(StatusCodes.Status201Created)
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status500InternalServerError)
-				.WithDescription("Crear cuenta nueva");
+				.WithDescription("Crear cuenta nueva")
+				.WithSummary("Endpoint para crear una nueva cuenta");
 
-			// Modificar cuenta
 			group.MapPut("/accounts/{id:guid}", async (Guid id, UpdateAccountBody body, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var account = await sender.Send(new UpdateAccountCommand
@@ -64,9 +63,9 @@ namespace BootcampAPI.Endpoints
 				.Produces<AccountDTO>(StatusCodes.Status200OK)
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status500InternalServerError)
-				.WithDescription("Modificar una cuenta existente");
+				.WithDescription("Modificar una cuenta")
+				.WithSummary("Actualizar los datos de una cuenta existente");
 			
-			// Eliminar una cuenta
 			group.MapDelete("{id:guid}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var deleted = await sender.Send(new DeleteAccountCommand(id), cancellationToken);
@@ -76,7 +75,8 @@ namespace BootcampAPI.Endpoints
 				.Produces(StatusCodes.Status204NoContent)
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status500InternalServerError)
-				.WithDescription("Eliminar una cuenta por ID");
+				.WithDescription("Eliminar una cuenta por ID")
+				.WithSummary("Eliminar una cuenta");
 		}
 	}
 }
