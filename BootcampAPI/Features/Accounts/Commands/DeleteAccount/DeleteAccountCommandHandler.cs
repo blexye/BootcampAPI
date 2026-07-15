@@ -12,7 +12,10 @@ namespace BootcampAPI.Features.Accounts.Commands.DeleteAccount
             if (account is null)
                 return false;
 
-            repository.Remove(account);
+            account.IsActive = false;
+
+            //repository.Remove(account);
+
             await repository.SaveChangesAsync(cancellationToken);
 
             return true;
