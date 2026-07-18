@@ -7,6 +7,7 @@
 		string AccountType,
 		decimal Balance,
 		string Currency,
-		bool IsActive
+		bool IsActive,
+		DateTime CreatedAt
 	);
 }

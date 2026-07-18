@@ -3,12 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BootcampAPI.Infrastructure.Persistance
 {
-	public class AppDbContext : DbContext
+	public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 	{
-		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-		{
-		}
-
 		public DbSet<Account> Accounts => Set<Account>();
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Account>(entity =>
+			{
+				entity.HasKey(c => c.Id);
+				entity.Property(c => c.AccountNumber).IsRequired().HasMaxLength(20);
+				entity.Property(c => c.AccountType).IsRequired().HasMaxLength(30);
+				entity.Property(c => c.Balance).IsRequired();
+				entity.Property(c => c.Currency).IsRequired().HasMaxLength(3);
+			});
+		}
 	}
 }

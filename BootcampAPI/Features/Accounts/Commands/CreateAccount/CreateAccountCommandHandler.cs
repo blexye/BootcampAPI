@@ -15,7 +15,8 @@ namespace BootcampAPI.Features.Accounts.Commands.CreateAccount
 				AccountNumber = request.AccountNumber,
 				AccountType = request.AccountType,
 				Balance = request.Balance,
-				Currency = request.Currency
+				Currency = request.Currency,
+				CreatedAt = DateTime.UtcNow
 			};
 
 			await repository.AddAsync(account, cancellationToken);

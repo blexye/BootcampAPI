@@ -13,6 +13,7 @@ namespace BootcampAPI.Features.Accounts.Commands.DeleteAccount
                 return false;
 
             account.IsActive = false;
+            account.DeletedAt = DateTime.UtcNow;
 
             //repository.Remove(account);
 

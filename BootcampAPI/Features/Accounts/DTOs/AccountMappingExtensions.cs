@@ -12,7 +12,8 @@ namespace BootcampAPI.Features.Accounts.DTOs
 				account.AccountType,
 				account.Balance,
 				account.Currency,
-				account.IsActive
+				account.IsActive,
+				account.CreatedAt
 			);
 	}
 }
