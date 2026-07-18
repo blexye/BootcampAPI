@@ -11,7 +11,7 @@ namespace BootcampAPI.Infrastructure
 		{
 			services.AddDbContext<AppDbContext>
 			(options =>
-				options.UseSqlite(configuration.GetConnectionString("DefaultConnection"))
+				options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
 			);
 
 			services.AddScoped<IAccountRepository, AccountRepository>();
