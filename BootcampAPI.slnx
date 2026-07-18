@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="BootcampAPI/BootcampAPI.csproj" />
+  <Folder Name="/src/">
+    <File Path="Dockerfile" />
+    <Project Path="BootcampAPI/BootcampAPI.Api.csproj" />
+  </Folder>
 </Solution>
