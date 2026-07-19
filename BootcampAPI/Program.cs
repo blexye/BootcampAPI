@@ -2,10 +2,12 @@ using BootcampAPI.Application.Common.Behaviors;
 using BootcampAPI.Endpoints;
 using BootcampAPI.Features.Accounts.Commands.CreateAccount;
 using BootcampAPI.Infrastructure;
-using Scalar.AspNetCore;
+using BootcampAPI.Infrastructure.Persistance;
 using BootcampAPI.Middleware;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using MediatR;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,18 +35,21 @@ var app = builder.Build();
 
 app.UseValidationExceptionHandling();
 
-if (app.Environment.IsDevelopment())
-{
-	app.MapOpenApi();
-	app.MapScalarApiReference();
+app.MapOpenApi();
+app.MapScalarApiReference();
 
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.MapAccountEndpoints();
+
+using (var scope = app.Services.CreateScope())
+{
+	var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	db.Database.Migrate();
+}
 
 app.Run();
