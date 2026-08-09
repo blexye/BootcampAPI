@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using BootcampAPI.Features.Accounts.Commands.CreateAccount;
-using BootcampAPI.Features.Accounts.DTOs;
-using BootcampAPI.Features.Accounts.Commands.UpdateAccount;
-using BootcampAPI.Features.Accounts.Queries.GetAccountById;
-using BootcampAPI.Features.Accounts.Queries.GetAllAccounts;
-using BootcampAPI.Features.Accounts.Commands.DeleteAccount;
+using BootcampAPI.Api.Application.Accounts.Commands.UpdateAccount;
+using BootcampAPI.Api.Application.Accounts.Queries.GetAccountById;
+using BootcampAPI.Api.Application.Accounts.Queries.GetAllAccounts;
+using BootcampAPI.Api.Application.Accounts.Commands.DeleteAccount;
+using BootcampAPI.Api.Application.Accounts.DTOs;
+using BootcampAPI.Api.Application.Accounts.Commands.CreateAccount;
 
 namespace BootcampAPI.Endpoints
 {

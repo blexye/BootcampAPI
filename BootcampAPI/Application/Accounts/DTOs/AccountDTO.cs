@@ -1,4 +1,4 @@
-﻿namespace BootcampAPI.Features.Accounts.DTOs
+﻿namespace BootcampAPI.Api.Application.Accounts.DTOs
 {
 	public record AccountDTO
 	(

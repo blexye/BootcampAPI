@@ -1,55 +1,72 @@
-using BootcampAPI.Application.Common.Behaviors;
 using BootcampAPI.Endpoints;
-using BootcampAPI.Features.Accounts.Commands.CreateAccount;
-using BootcampAPI.Infrastructure;
 using BootcampAPI.Infrastructure.Persistance;
 using BootcampAPI.Middleware;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using MediatR;
 using Scalar.AspNetCore;
+using Serilog;
+using BootcampAPI.Api.Application;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Async(a => a.Console())
+    .CreateBootstrapLogger();
 
-builder.Services.AddValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
-
-builder.Services.AddTransient
-(
-	typeof(IPipelineBehavior<,>),
-	typeof(ValidationBehavior<,>)
-);
-
-builder.Services.AddInfrastructure(builder.Configuration);
-
-builder.Services.AddMediatR(cfg =>
+try
 {
-	cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Host.UseSerilog((context, loggerConfiguration) =>
+    {
+        var applicationName = context.Configuration["APPLICATION_NAME"] ?? "BootcampAPI.Api";
+        var seqUrl = context.Configuration["Seq:ServerUrl"] ?? "http://localhost:5341";
 
-var app = builder.Build();
+        loggerConfiguration
+            .ReadFrom.Configuration(context.Configuration)
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("Application", applicationName)
+            .WriteTo.Async(a => a.Console(
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Application} {Message:lj}{NewLine}{Exception}"))
+            .WriteTo.Async(a => a.Seq(seqUrl));
+    });
+    
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddApplication();
 
-app.UseValidationExceptionHandling();
+    builder.Services.AddControllers();
+    builder.Services.AddOpenApi();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
-app.MapOpenApi();
-app.MapScalarApiReference();
+    var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+    app.UseValidationExceptionHandling();
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.MapAccountEndpoints();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "BootcampAPI.Api";
+    });
 
-using (var scope = app.Services.CreateScope())
-{
-	var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-	db.Database.Migrate();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+    app.MapAccountEndpoints();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+    }
+
+    app.Run();
 }
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "BootcampAPI terminó de forma inesperada durante el arranque");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

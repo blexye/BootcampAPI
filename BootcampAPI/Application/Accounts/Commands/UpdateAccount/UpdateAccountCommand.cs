@@ -1,7 +1,7 @@
-﻿using BootcampAPI.Features.Accounts.DTOs;
+﻿using BootcampAPI.Api.Application.Accounts.DTOs;
 using MediatR;
 
-namespace BootcampAPI.Features.Accounts.Commands.UpdateAccount
+namespace BootcampAPI.Api.Application.Accounts.Commands.UpdateAccount
 {
 	public record UpdateAccountCommand
 	(

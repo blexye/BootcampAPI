@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using BootcampAPI.Features.Accounts.DTOs;
+using BootcampAPI.Api.Application.Accounts.DTOs;
 
-namespace BootcampAPI.Features.Accounts.Commands.CreateAccount
+namespace BootcampAPI.Api.Application.Accounts.Commands.CreateAccount
 {
 	public record CreateAccountCommand
 	(

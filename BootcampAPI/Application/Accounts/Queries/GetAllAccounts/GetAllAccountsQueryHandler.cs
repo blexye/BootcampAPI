@@ -1,8 +1,9 @@
-﻿using BootcampAPI.Application.Interfaces;
-using BootcampAPI.Features.Accounts.DTOs;
+﻿using BootcampAPI.Api.Application.Accounts.DTOs;
+using BootcampAPI.Api.Application.Accounts.Mappings;
+using BootcampAPI.Application.Interfaces;
 using MediatR;
 
-namespace BootcampAPI.Features.Accounts.Queries.GetAllAccounts
+namespace BootcampAPI.Api.Application.Accounts.Queries.GetAllAccounts
 {
     public class GetAllAccountsQueryHandler(IAccountRepository repository) : IRequestHandler<GetAllAccountsQuery, IReadOnlyList<AccountDTO>>
     {

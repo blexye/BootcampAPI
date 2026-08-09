@@ -1,6 +1,7 @@
-﻿using BootcampAPI.Domain.Entities;
+﻿using BootcampAPI.Api.Application.Accounts.DTOs;
+using BootcampAPI.Domain.Entities;
 
-namespace BootcampAPI.Features.Accounts.DTOs
+namespace BootcampAPI.Api.Application.Accounts.Mappings
 {
 	public static class AccountMappingExtensions
 	{

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BootcampAPI.Features.Accounts.Queries.GetAccountById
+namespace BootcampAPI.Api.Application.Accounts.Queries.GetAccountById
 {
 	public class GetAccountByIdQueryValidator : AbstractValidator<GetAccountByIdQuery>
 	{

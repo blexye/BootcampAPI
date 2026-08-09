@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BootcampAPI.Features.Accounts.Commands.UpdateAccount
+namespace BootcampAPI.Api.Application.Accounts.Commands.UpdateAccount
 {
 	public class UpdateAccountCommandValidator : AbstractValidator<UpdateAccountCommand>
 	{

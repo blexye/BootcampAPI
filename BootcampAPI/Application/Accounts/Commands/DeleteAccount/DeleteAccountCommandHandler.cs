@@ -1,7 +1,7 @@
 ﻿using BootcampAPI.Application.Interfaces;
 using MediatR;
 
-namespace BootcampAPI.Features.Accounts.Commands.DeleteAccount
+namespace BootcampAPI.Api.Application.Accounts.Commands.DeleteAccount
 {
     public class DeleteAccountCommandHandler(IAccountRepository repository) : IRequestHandler<DeleteAccountCommand, bool>
     {

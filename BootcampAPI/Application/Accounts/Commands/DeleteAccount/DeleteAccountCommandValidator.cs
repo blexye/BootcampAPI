@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace BootcampAPI.Features.Accounts.Commands.DeleteAccount
+namespace BootcampAPI.Api.Application.Accounts.Commands.DeleteAccount
 {
     public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountCommand>
     {
