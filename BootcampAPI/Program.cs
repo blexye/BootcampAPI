@@ -40,14 +40,17 @@ try
 
     app.UseValidationExceptionHandling();
 
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
+    if (app.Environment.IsDevelopment())
     {
-        options.Title = "BootcampAPI.Api";
-    });
+        app.MapOpenApi();
+        app.MapScalarApiReference(options =>
+        {
+            options.Title = "BootcampAPI.Api";
+        });
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
     app.UseHttpsRedirection();
     app.UseAuthorization();
