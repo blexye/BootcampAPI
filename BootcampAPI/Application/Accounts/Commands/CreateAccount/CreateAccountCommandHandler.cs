@@ -3,7 +3,6 @@ using BootcampAPI.Api.Application.Accounts.Mappings;
 using BootcampAPI.Application.Interfaces;
 using BootcampAPI.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace BootcampAPI.Api.Application.Accounts.Commands.CreateAccount
 {
@@ -27,18 +26,22 @@ namespace BootcampAPI.Api.Application.Accounts.Commands.CreateAccount
 			await repository.AddAsync(account, cancellationToken);
 			await repository.SaveChangesAsync(cancellationToken);
 
-            logger.LogInformation(
+            logger.LogInformation
+            (
                 "La cuenta {Id} ({AccountNumber}) fue creada exitosamente.",
                 account.Id,
-                account.AccountNumber);
+                account.AccountNumber
+            );
 
             if (account.Balance < MinimumRecommendedBalance)
             {
-                logger.LogWarning(
+                logger.LogWarning
+                (
                     "La cuenta {AccountNumber} creado con balance {Balance} por debajo del recomendado {MinimumBalance}",
                     account.AccountNumber,
                     account.Balance,
-                    MinimumRecommendedBalance);
+                    MinimumRecommendedBalance
+                );
             }
 
             return account.ToDto();
