@@ -61,6 +61,26 @@ namespace BootcampAPI.Middleware
                         errors
                     });
                 }
+                catch (BadHttpRequestException ex)
+                {
+                    logger.LogWarning
+                    (
+                        ex,
+                        "Solicitud inválida en {Method} {Path}: uno o más datos ingresados no son correctos",
+                        context.Request.Method,
+                        context.Request.Path
+                    );
+
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    context.Response.ContentType = "application/json";
+
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        title = "Solicitud inválida",
+                        status = StatusCodes.Status400BadRequest,
+                        message = "Uno o más campos tiene un tipo de dato incorrecto"
+                    });
+                }
                 catch (Exception ex)
                 {
                     logger.LogError
@@ -77,6 +97,10 @@ namespace BootcampAPI.Middleware
                     {
                         title = "Ocurrió un error inesperado",
                         status = StatusCodes.Status500InternalServerError
+
+                        //obtener el tipo de excepción y el mensaje
+                        //exception = ex.GetType().FullName,
+                        //message = ex.Message
                     });
                 }
                 finally
