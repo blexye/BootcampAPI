@@ -80,19 +80,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ensure Minikube is running
+      - name: Verify Minikube context
         shell: powershell
         run: |
-          $status = minikube status --output=json 2>$null | ConvertFrom-Json
-
-          if ($status.Host -ne "Running") {
-            Write-Host "Minikube is not running. Starting Minikube..."
-            minikube start --driver=docker
-          }
-          else {
-            Write-Host "Minikube is already running."
-          }
-
+          minikube status
           kubectl config use-context minikube
           kubectl cluster-info
 
