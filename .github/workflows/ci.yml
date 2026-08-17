@@ -47,8 +47,8 @@ jobs:
 
       - name: Validate Helm chart
         run: |
-          helm lint helm/accounts-api
-          helm template accounts-api helm/accounts-api > /dev/null
+          helm lint helm/helm/accounts-api
+          helm template accounts-api helm/helm/accounts-api > /dev/null
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -98,7 +98,7 @@ jobs:
       - name: Deploy API with Helm
         shell: powershell
         run: |
-          helm upgrade --install accounts-api ./helm/accounts-api `
+          helm upgrade --install accounts-api ./helm/helm/accounts-api `
             --namespace accounts `
             --create-namespace `
             --set image.repository=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/accounts-api `
