@@ -1,0 +1,64 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: docker.io/blexye/accounts-api
+  tag: latest
+  pullPolicy: Always
+
+containerPort: 8080
+
+# Datos no sensibles -> ConfigMap
+appName: BootcampAPI
+aspnetEnvironment: Development
+
+# -----------------------------------------------------------------------------
+# Overlay de values.yaml para usar junto con templates/secret-base64.yaml
+# -----------------------------------------------------------------------------
+# Contiene la misma connection string que arma secret.yaml a partir de
+# values.yaml (postgres.host/port/database/username/password), pero ya
+# codificada en base64, porque el Secret "data" no la codifica por nosotros.
+#
+# Generado con:
+#   printf "Host=postgres;Port=5432;Database=BootcampAPIDB;Username=postgres;Password=admin" | base64
+#
+# Uso: helm install ... -f values.yaml -f values-base64.yaml
+
+# Datos de conexión a la base -> Secret (se arma la connection string en el template)
+postgres:
+  ConnectionStrings__DefaultConnection: "SG9zdD1wb3N0Z3JlcztQb3J0PTU0MzI7RGF0YWJhc2U9Qm9vdGNhbXBBUElEQjtVc2VybmFtZT1wb3N0Z3JlcztQYXNzd29yZD1hZG1pbg=="
+  host: postgres
+  port: 5432
+  database: BootcampAPIDB
+  username: postgres
+  password: admin
+
+service:
+  type: NodePort
+  port: 8080
+  targetPort: 8080
+  nodePort: 30080
+
+# Init container que espera a que Postgres esté listo antes de arrancar la API
+waitForPostgres:
+  enabled: true
+  image: postgres:17
+
+probes:
+  path: /api/minimal
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+  liveness:
+    initialDelaySeconds: 20
+    periodSeconds: 15
+
+resources: {}
+  # limits:
+  #   cpu: 250m
+  #   memory: 256Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
