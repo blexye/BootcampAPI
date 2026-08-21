@@ -1,10 +1,13 @@
+using BootcampAPI.Api.Application;
 using BootcampAPI.Endpoints;
 using BootcampAPI.Infrastructure.Persistance;
 using BootcampAPI.Middleware;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 using Serilog;
-using BootcampAPI.Api.Application;
+using Serilog.Events;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Async(a => a.Console())
@@ -36,7 +39,32 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>(
+        name: "postgresql",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: ["ready"]);
+
     var app = builder.Build();
+
+    app.UseSerilogRequestLogging(options =>
+    {
+        options.GetLevel = (httpContext, _, exception) =>
+            httpContext.Request.Path.StartsWithSegments("/health")
+                ? LogEventLevel.Debug
+                : exception is not null || httpContext.Response.StatusCode >= 500
+                    ? LogEventLevel.Error
+                    : LogEventLevel.Information;
+
+        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+        {
+            diagnosticContext.Set("RequestId", httpContext.TraceIdentifier);
+            diagnosticContext.Set("ClientIp", httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value ?? "unknown");
+            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+            diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"].ToString());
+        };
+    });
 
     app.UseValidationExceptionHandling();
 
@@ -62,6 +90,15 @@ try
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         db.Database.Migrate();
     }
+
+    app.MapHealthChecks("/health/live", new HealthCheckOptions
+    {
+        Predicate = _ => false
+    });
+    app.MapHealthChecks("/health/ready", new HealthCheckOptions
+    {
+        Predicate = healthCheck => healthCheck.Tags.Contains("ready")
+    });
 
     app.Run();
 }
