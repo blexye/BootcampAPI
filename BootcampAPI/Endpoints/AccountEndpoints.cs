@@ -12,7 +12,7 @@ namespace BootcampAPI.Endpoints
 	{
 		public static void MapAccountEndpoints(this WebApplication app)
 		{
-			var group = app.MapGroup("/api/minimal").WithTags("Accounts");
+			var group = app.MapGroup("/api/minimal/accounts").WithTags("Accounts");
 
             group.MapGet("", async (ISender sender, CancellationToken cancellationToken) =>
                 Results.Ok(await sender.Send(new GetAllAccountsQuery(), cancellationToken)))
@@ -36,7 +36,7 @@ namespace BootcampAPI.Endpoints
                 .WithDescription("Obtener una cuenta por ID")
 				.WithSummary("Obtener los datos de una cuenta por ID");
 
-            group.MapPost("/accounts", async (CreateAccountCommand command, ISender sender, CancellationToken cancellationToken) =>
+            group.MapPost("", async (CreateAccountCommand command, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var account = await sender.Send(command, cancellationToken);
 				return Results.Created($"api/minimal/{account.Id}", account);
@@ -47,7 +47,7 @@ namespace BootcampAPI.Endpoints
 				.WithDescription("Crear cuenta nueva")
 				.WithSummary("Endpoint para crear una nueva cuenta");
 
-			group.MapPut("/accounts/{id:guid}", async (Guid id, UpdateAccountBody body, ISender sender, CancellationToken cancellationToken) =>
+			group.MapPut("{id:guid}", async (Guid id, UpdateAccountBody body, ISender sender, CancellationToken cancellationToken) =>
 			{
 				var account = await sender.Send(new UpdateAccountCommand
 				(
