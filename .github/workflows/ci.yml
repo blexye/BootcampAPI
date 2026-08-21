@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Build, test and publish
+    name: Build, test y publicado
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.meta.outputs.tag }}
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set image tag
+      - name: Setear tag de la imagen
         id: meta
         shell: bash
         run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
@@ -45,12 +45,12 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v4
 
-      - name: Validate Helm chart
+      - name: Validar Helm chart
         run: |
           helm lint helm/helm/accounts-api
           helm template accounts-api helm/helm/accounts-api > /dev/null
 
-      - name: Login to Docker Hub
+      - name: Login a Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -59,7 +59,7 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push image
+      - name: Build y push de la imagen
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -71,7 +71,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   cd:
-    name: Deploy to local Minikube
+    name: Desplegar en Minikube local
     needs: ci
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 10
@@ -80,22 +80,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Minikube context
+      - name: Verificar contexto de Minikube
         shell: powershell
         run: |
           minikube status
           kubectl config use-context minikube
           kubectl cluster-info
 
-      - name: Deploy PostgreSQL and Seq
+      - name: Desplegar PostgreSQL y Seq
         shell: powershell
         run: |
-          kubectl apply -f k8s/00-namespace.yaml
-          kubectl apply -f k8s
+          kubectl apply -f helm/k8s/00-namespace.yaml
+          kubectl apply -f helm/k8s
           kubectl rollout status deployment/postgres --namespace accounts --timeout=120s
           kubectl rollout status deployment/seq --namespace accounts --timeout=120s
 
-      - name: Deploy API with Helm
+      - name: Deplegar API con Helm
         shell: powershell
         run: |
           helm upgrade --install accounts-api ./helm/helm/accounts-api `
@@ -108,7 +108,7 @@ jobs:
             --wait `
             --timeout 3m
 
-      - name: Verify API rollout
+      - name: Verificar API rollout
         shell: powershell
         run: |
           kubectl rollout status deployment/accounts-api --namespace accounts --timeout=120s
