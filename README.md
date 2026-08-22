@@ -59,5 +59,3 @@ El proyecto utiliza GitHub Actions para automatizar el proceso de integración c
 ## Autor
 
 Marcelo Avalos
-
-Proyecto desarrollado como parte de un bootcamp de desarrollo backend y DevOps.
