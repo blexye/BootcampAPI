@@ -42,16 +42,6 @@ CQRS se utiliza mediante MediatR para separar las operaciones de lectura (`Queri
 - Despliegue mediante Kubernetes y Helm
 - Pipeline de CI/CD mediante GitHub Actions
 
-## Kubernetes con Minikube
-
-### Requisitos
-
-- Docker Desktop
-- Minikube
-- kubectl
-- Helm
-- Git
-
 ## CI/CD
 
 El proyecto utiliza GitHub Actions para automatizar el proceso de integración continua.
