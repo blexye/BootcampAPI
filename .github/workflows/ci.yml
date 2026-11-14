@@ -2,7 +2,7 @@ name: CI-CD BootcampAPI
 
 on:
   push:
-    branches: [not-main]
+    branches: [accounts-api/modulo-quickDeposit]
   workflow_dispatch:
 
 permissions:
