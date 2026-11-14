@@ -1,4 +1,6 @@
 ﻿using BootcampAPI.Api.Application.Accounts.DTOs;
+using BootcampAPI.Api.Domain.Enums;
+using BootcampAPI.Domain.Enums;
 using MediatR;
 
 namespace BootcampAPI.Api.Application.Accounts.Commands.UpdateAccount
@@ -7,8 +9,8 @@ namespace BootcampAPI.Api.Application.Accounts.Commands.UpdateAccount
 	(
 		Guid Id,
 		int AccountNumber,
-		string AccountType,
+		TiposCuenta AccountType,
 		decimal Balance,
-		string Currency
+		Monedas Currency
 	) : IRequest<AccountDTO?>;
 }

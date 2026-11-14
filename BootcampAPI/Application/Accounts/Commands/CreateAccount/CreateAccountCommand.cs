@@ -1,13 +1,15 @@
 ﻿using MediatR;
 using BootcampAPI.Api.Application.Accounts.DTOs;
+using BootcampAPI.Domain.Enums;
+using BootcampAPI.Api.Domain.Enums;
 
 namespace BootcampAPI.Api.Application.Accounts.Commands.CreateAccount
 {
 	public record CreateAccountCommand
 	(
 		int AccountNumber,
-		string AccountType,
+		TiposCuenta AccountType,
 		decimal Balance,
-		string Currency
+		Monedas Currency
 	) : IRequest<AccountDTO>;
 }

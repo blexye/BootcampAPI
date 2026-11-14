@@ -5,6 +5,8 @@ using BootcampAPI.Api.Application.Accounts.Queries.GetAllAccounts;
 using BootcampAPI.Api.Application.Accounts.Commands.DeleteAccount;
 using BootcampAPI.Api.Application.Accounts.DTOs;
 using BootcampAPI.Api.Application.Accounts.Commands.CreateAccount;
+using BootcampAPI.Domain.Enums;
+using BootcampAPI.Api.Domain.Enums;
 
 namespace BootcampAPI.Endpoints
 {
@@ -84,7 +86,7 @@ namespace BootcampAPI.Endpoints
 public record UpdateAccountBody
 (
 	int AccountNumber,
-	string AccountType,
+	TiposCuenta AccountType,
 	decimal Balance,
-	string Currency
+	Monedas Currency
 );

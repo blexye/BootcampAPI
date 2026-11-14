@@ -17,7 +17,7 @@ namespace BootcampAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.9")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -34,19 +34,18 @@ namespace BootcampAPI.Migrations
 
                     b.Property<string>("AccountType")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("text");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("numeric");
+                    b.Property<string>("Balance")
+                        .IsRequired()
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
+                    b.Property<int>("Currency")
                         .HasMaxLength(3)
-                        .HasColumnType("character varying(3)");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -57,6 +56,85 @@ namespace BootcampAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("BootcampAPI.Domain.Entities.DepositoCheque", b =>
+                {
+                    b.Property<Guid>("IdDepositoCheque")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BancoEmisor")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<string>("EstadoDeposito")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<DateTime?>("FechaRevisionDepositoCheque")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("FechaSolicitudDepositoCheque")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("FechaUltimaModificacionDepositoCheque")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FotoDorsalRuta")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("FotoFrontalRuta")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("IdAccount")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MontoLetra")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<decimal>("MontoNumero")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("MotivoRechazo")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("NumeroCheque")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("IdDepositoCheque");
+
+                    b.HasIndex("EstadoDeposito");
+
+                    b.HasIndex("IdAccount");
+
+                    b.ToTable("DepositoCheques");
+                });
+
+            modelBuilder.Entity("BootcampAPI.Domain.Entities.DepositoCheque", b =>
+                {
+                    b.HasOne("BootcampAPI.Domain.Entities.Account", null)
+                        .WithMany()
+                        .HasForeignKey("IdAccount")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -1,12 +1,15 @@
-﻿namespace BootcampAPI.Api.Application.Accounts.DTOs
+﻿using BootcampAPI.Api.Domain.Enums;
+using BootcampAPI.Domain.Enums;
+
+namespace BootcampAPI.Api.Application.Accounts.DTOs
 {
 	public record AccountDTO
 	(
 		Guid Id,
 		int AccountNumber,
-		string AccountType,
+		TiposCuenta AccountType,
 		decimal Balance,
-		string Currency,
+		Monedas Currency,
 		bool IsActive,
 		DateTime CreatedAt
 	);

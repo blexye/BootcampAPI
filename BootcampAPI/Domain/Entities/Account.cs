@@ -1,12 +1,15 @@
-﻿namespace BootcampAPI.Domain.Entities
+﻿using BootcampAPI.Api.Domain.Enums;
+using BootcampAPI.Domain.Enums;
+
+namespace BootcampAPI.Domain.Entities
 {
 	public class Account
 	{
 		public Guid Id { get; set; }
 		public int AccountNumber { get; set; }
-		public string AccountType { get; set; } = string.Empty;
+		public TiposCuenta AccountType { get; set; } = TiposCuenta.CuentaCorriente;
 		public decimal Balance { get; set; }
-		public string Currency { get; set; } = string.Empty;
+		public Monedas Currency { get; set; } = Monedas.PYG;
 		public bool IsActive { get; set; } = true;
 		public DateTime CreatedAt { get; set; }
 		public DateTime? DeletedAt { get; set; }
